@@ -113,23 +113,153 @@ cert-digest-algo SHA512
 default-preference-list SHA512 SHA384 SHA256 SHA224 AES256 AES192 AES CAST5 ZLIB BZIP2 ZIP Uncompressed
 ```
 
-3. Configure SC daemon?
+<!--
+3. Configure SC Daemon?
 
+Found this on forums, but did not end up solving or hurting but unclear if it
+was necessary?
+
+~/.gnupg/scdaemon.conf
 ```
-~/.gnupg/scdaemon.conf and add "pcsc-driver /System/Library/Frameworks/PCSC.framework/PCSC"
+disable-application openpgp nks
+pcsc-driver /System/Library/Frameworks/PCSC.framework/PCSC
+```
+
+-->
+
+3. Temporarily disable U2F
+
+Having U2F enabled will result in `sharing violations` that results in `gpg2`
+not being able to access the yubikey.
+
+You will be able to renable U2F and it won't break any sites you already set
+up with U2F.
+
+```bash
+> ykman mode
+Current connection mode is: U2F+CCID
+Supported connections are: OTP, U2F, CCID
+> ykman mode "CCID"
+Set mode of YubiKey to CCID? [y/N]: Y
+Mode set! You must remove and re-insert your YubiKey for this change to take effect.
+> ykman mode
+Current connection mode is: CCID
+Supported connections are: OTP, U2F, CCID
 ```
 
 3. Generate Keys
 
-TODO: Should be able to generate keys directly on the yubikey
+_Note:_ If you have a Yubikey 4, you should use 4096 as your key length. NEO
+owners should use 2048 as that is the maximum supported.
+
+```bash
+> gpg2 --card-edit
+
+[truncated]...
+
+gpg/card> admin
+Admin commands are allowed
+
+gpg/card> generate
+Make off-card backup of encryption key? (Y/n) n
+
+Please note that the factory settings of the PINs are
+   PIN = `123456'     Admin PIN = `12345678'
+You should change them using the command --change-pin
+
+What keysize do you want for the Signature key? (2048) 4096
+The card will now be re-configured to generate a key of 4096 bits
+NOTE: There is no guarantee that the card supports the requested size.
+      If the key generation does not succeed, please check the
+      documentation of your card to see what sizes are allowed.
+What keysize do you want for the Encryption key? (2048) 4096
+The card will now be re-configured to generate a key of 4096 bits
+What keysize do you want for the Authentication key? (2048) 4096
+The card will now be re-configured to generate a key of 4096 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      <n>  = key expires in n days
+      <n>w = key expires in n weeks
+      <n>m = key expires in n months
+      <n>y = key expires in n years
+Key is valid for? (0)
+Key does not expire at all
+Is this correct? (y/N) Y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: <YOUR_NAME_HERE>
+Email address: <YOUR_EMAIL_HERE>
+Comment:
+You selected this USER-ID:
+    "YOUR_NAME_HERE <YOUR_EMAIL_HERE>"
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+```
+
+The yubikey will flash as it's creating the key. Mine took about 5 minutes.
+When complete, it will say something like
+
+```
+gpg: key 00000000 marked as ultimately trusted
+public and secret key created and signed.
+
+...truncated...
+```
+
+You should change your PIN and Admin PIN. You can do that here with `passwd`
+at the `gpg/card>` prompt:
+
+```
+
+> gpg --card-edit
+
+...truncated...
+
+gpg/card> admin
+Admin commands are allowed
+
+gpg/card> passwd
+
+1 - change PIN
+2 - unblock PIN
+3 - change Admin PIN
+4 - set the Reset Code
+Q - quit
+
+Your selection? 3
+PIN changed.
+
+1 - change PIN
+2 - unblock PIN
+3 - change Admin PIN
+4 - set the Reset Code
+Q - quit
+
+Your selection? 1
+PIN changed.
+```
+
+### Optional gpg setup
+
+While you're here:
+```
+gpg/card> name
+Cardholder's surname: Chang
+Cardholder's given name: Liyan (David)
+
+gpg/card> sex
+Sex ((M)ale, (F)emale or space): M
+
+gpg/card> lang
+Language preferences: en
+
+gpg/card>
+```
+You can see the configuration by typing `list` on the `gpg/card>` prompt.
 
 https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-openpgp/
 
-```
-> gpg2 --card-edit
-
-gpg: OpenPGP card not available: Not supported
-```
 
 
 ## Yubikey for SSH logins
@@ -175,5 +305,28 @@ SERVICE_NAME 693720
 
 Note: There is a way to configure a long press to enter the TOTP password, but
 given that I expect you to have many TOTP codes, this seems pretty useless.
+
+
+## Notes
+
+### Sharing Violation, Card Read Error
+
+
+```bash
+% Fix by toggling off U2F mode
+> gpg2 --card-edit
+
+gpg: OpenPGP card not available: Not supported
+> gpg --card-status
+
+gpg: OpenPGP card not available: general error
+% Other commands
+> pcsctest
+> opensc-tool
+```
+
+
+
+
 
 
