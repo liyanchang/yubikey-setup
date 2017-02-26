@@ -16,13 +16,6 @@ The instructions have been tested on macOS 10.12 (Sierra) with a Yubikey 4.
 
 To perform these instructions, the Yubikey should be plugged into your computer's USB port.
 
-## Install Software
-
-- [GPGTools GPG Suite](https://gpgtools.org/)
-   - Stash the DMG somewhere if you ever need to uninstall it, as an uninstaller is in there
-   - After installation completes, you don't need to do anything via the GPG Keychain GUI
-   - Benefits (versus Terminal apps): Launches gpg-agent automatically, has a GUI for management and PIN entry, doesn't require Yubikey modes to be changed during GPG setup
-
 ## U2F Setup
 
 ### GitHub
@@ -52,7 +45,13 @@ Yubico has a [video](https://www.yubico.com/why-yubico/for-individuals/gmail-for
 
 ## Setup GPG Key
 
-Start a Terminal session, then issue the following commands and options:
+Before you being, you'll need to install [GPGTools GPG Suite](https://gpgtools.org/). As you do this, here are a few notes about it:
+   
+- Stash the DMG somewhere if you ever need to uninstall it, as an uninstaller is in the DMG package
+- After installation completes, you don't need to do anything via the GPG Keychain GUI
+- Benefits (versus CLI-only apps): Launches gpg-agent automatically, has a GUI for management and PIN entry, doesn't require Yubikey modes to be changed during GPG setup, still installs the CLI apps
+
+Now, generate the keys. Start a Terminal session, then issue the following commands and options:
 
 ```bash
 > gpg2 --card-edit
