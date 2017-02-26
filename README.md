@@ -1,4 +1,4 @@
-# Yubikey setup
+# Yubikey macOS Setup
 
 *You bought a yubikey - now what?*
 
@@ -12,50 +12,13 @@ This is highly opinionated on how you should and should not use your yubikey
 but is organized well enough that you should be able to modify if you have a
 need.
 
-The instructions are only for OSX 10.12.
+The instructions have been tested on macOS 10.12 (Sierra) with a Yubikey 4.
 
-## Insert the yubikey into your computer
+To perform these instructions, the Yubikey should be plugged into your computer's USB port.
 
-Plug it into a USB port.
+## Use for Two Factor Authentication / U2F Setup
 
-## Install some software
-
-```bash
-# For OSX
-> brew install python3 swig ykpers libu2f-host libusb
-> pip install yubikey-manager
-```
-
-## Turn off OTP - AKA the random letters when you accidentally touch it
-
-This will turn off One-Time-Password. Most users will not find OTP useful and
-will be confused by the random letters that will appear when they accidentally
-touch the yubikey.
-
-_Exception:_ If you use LastPass - LastPass does use OTP for their two factor
-and not U2F or TOTP (Google Authenticator) so you will want to skip this step
-if you are a LastPass user.
-
-```bash
-> ykman mode
-Current connection mode is: OTP+U2F+CCID
-Supported connections are: OTP, U2F, CCID
-> ykman mode "U2F+CCID"
-Set mode of YubiKey to U2F+CCID? [y/N]: Y
-Mode set! You must remove and re-insert your YubiKey for this change to take effect.
-```
-
-Remove and re-insert the yubikey.
-
-```bash
-> ykman mode
-Current connection mode is: U2F+CCID
-Supported connections are: OTP, U2F, CCID
-```
-
-## Set up your U2F
-
-### Github
+### GitHub
 
 1. Go to your [GitHub Security Settings](https://github.com/settings/security)
 2. Turn on `Two-factor Authentication` if it's not already enabled. You will
@@ -69,9 +32,10 @@ Supported connections are: OTP, U2F, CCID
 
 Yubico has more [detailed instructions](https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-github/).
 
-### Gmail
+### Google
 
-Similar instructions. TODO: Specific details
+Similar instructions. 
+
 1. Go to your [Google Sign-in & Security page](https://myaccount.google.com/security)
 2. Click `Two-step verification` and you may be prompted for your password.
 3. Click `Add Security Key` and follow the on-screen instructions. You may
@@ -79,83 +43,20 @@ Similar instructions. TODO: Specific details
 
 Yubico has a [video](https://www.yubico.com/why-yubico/for-individuals/gmail-for-individuals/)
 
-### Dropbox
+## Setup GPG Key
 
-1. Go to your [Dropbox Security Settings](https://www.dropbox.com/account/#security)
-2. Under `Security keys`, click `Add`
-3. Follow the on-screen instructions. You'll probably be prompted for your
-   password and touch the yubikey to complete registration.
+Before you being, you'll need to install [GPGTools GPG Suite](https://gpgtools.org/). As you do this, here are a few notes about it:
+   
+- Stash the DMG somewhere if you ever need to uninstall it, as an uninstaller is in the DMG package
+- After installation completes, you don't need to do anything via the GPG Keychain GUI
+- Benefits (versus CLI-only apps): Launches gpg-agent automatically, has a GUI for management and PIN entry, doesn't require Yubikey modes to be changed during GPG setup, still installs the CLI apps
 
-Yubico has a [video and more detailed instructions](https://www.yubico.com/why-yubico/for-individuals/dropbox-for-individuals/)
-
-### Dashlane, Salesforce, Bitbucket, Gitlab, GOV.UK Verify
-
-Yubico has [instructions](https://www.yubico.com/about/background/fido/)
-
-## Yubikey for GPG keysigning
-
-1. Install GPG2 if you haven't already
-
-```bash
-> brew install gnupg gnupg2
-```
-
-2. Configure your GPG conf at `~/.gnupg/gpg.conf`
-
-Suggested hardened [configuration](https://github.com/ioerror/duraconf/blob/master/configs/gnupg/gpg.conf)
-
-Here's the minimum that makes sense:
-```
-use-agent
-personal-cipher-preferences AES256 AES192 AES CAST5
-personal-digest-preferences SHA512 SHA384 SHA256 SHA224
-cert-digest-algo SHA512
-default-preference-list SHA512 SHA384 SHA256 SHA224 AES256 AES192 AES CAST5 ZLIB BZIP2 ZIP Uncompressed
-```
-
-<!--
-3. Configure SC Daemon?
-
-Found this on forums, but did not end up solving or hurting but unclear if it
-was necessary?
-
-~/.gnupg/scdaemon.conf
-```
-disable-application openpgp nks
-pcsc-driver /System/Library/Frameworks/PCSC.framework/PCSC
-```
-
--->
-
-3. Temporarily disable U2F
-
-Having U2F enabled will result in `sharing violations` that results in `gpg2`
-not being able to access the yubikey.
-
-You will be able to renable U2F and it won't break any sites you already set
-up with U2F.
-
-```bash
-> ykman mode
-Current connection mode is: U2F+CCID
-Supported connections are: OTP, U2F, CCID
-> ykman mode "CCID"
-Set mode of YubiKey to CCID? [y/N]: Y
-Mode set! You must remove and re-insert your YubiKey for this change to take effect.
-> ykman mode
-Current connection mode is: CCID
-Supported connections are: OTP, U2F, CCID
-```
-
-3. Generate Keys
-
-_Note:_ If you have a Yubikey 4, you should use 4096 as your key length. NEO
-owners should use 2048 as that is the maximum supported.
+Now, generate the keys. Start a Terminal session, then issue the following commands and options:
 
 ```bash
 > gpg2 --card-edit
 
-[truncated]...
+[truncated...]
 
 gpg/card> admin
 Admin commands are allowed
@@ -163,19 +64,20 @@ Admin commands are allowed
 gpg/card> generate
 Make off-card backup of encryption key? (Y/n) n
 
-Please note that the factory settings of the PINs are
-   PIN = `123456'     Admin PIN = `12345678'
-You should change them using the command --change-pin
+[PIN Entry pops up, enter 123456, which is the default pin]
 
-What keysize do you want for the Signature key? (2048) 4096
+What keysize do you want for the Signature key? (2048) 4096 [Yubikey NEO max is 2048]
+[PIN Entry pops up, enter 12345678, which is the default admin pin]
 The card will now be re-configured to generate a key of 4096 bits
-NOTE: There is no guarantee that the card supports the requested size.
-      If the key generation does not succeed, please check the
-      documentation of your card to see what sizes are allowed.
-What keysize do you want for the Encryption key? (2048) 4096
+
+What keysize do you want for the Encryption key? (2048) 4096 [Yubikey NEO max is 2048]
+[PIN Entry pops up, enter 12345678, which is the default admin pin]
 The card will now be re-configured to generate a key of 4096 bits
-What keysize do you want for the Authentication key? (2048) 4096
+
+What keysize do you want for the Authentication key? (2048) 4096 [Yubikey NEO max is 2048]
+[PIN Entry pops up, enter 12345678, which is the default admin pin]
 The card will now be re-configured to generate a key of 4096 bits
+
 Please specify how long the key should be valid.
          0 = key does not expire
       <n>  = key expires in n days
@@ -197,28 +99,20 @@ You selected this USER-ID:
 Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
 ```
 
-The yubikey will flash as it's creating the key. Mine took about 5 minutes.
+The Yubikey will flash as it's creating the key. Mine took about 5 minutes.
 When complete, it will say something like
 
 ```
 gpg: key 00000000 marked as ultimately trusted
 public and secret key created and signed.
 
-...truncated...
+[truncated...]
 ```
 
-You should change your PIN and Admin PIN. You can do that here with `passwd`
-at the `gpg/card>` prompt:
+You should change your PIN and Admin PIN. You can do that here with `passwd` command
+at the `gpg --card-edit` `gpg/card>` prompt while in admin mode (i.e. where we left off from the prior step):
 
 ```
-
-> gpg --card-edit
-
-...truncated...
-
-gpg/card> admin
-Admin commands are allowed
-
 gpg/card> passwd
 
 1 - change PIN
@@ -227,7 +121,11 @@ gpg/card> passwd
 4 - set the Reset Code
 Q - quit
 
-Your selection? 3
+Your selection? 1
+[Enter 123456]
+[Enter your new PIN]
+[Enter your new PIN again]
+
 PIN changed.
 
 1 - change PIN
@@ -236,97 +134,93 @@ PIN changed.
 4 - set the Reset Code
 Q - quit
 
-Your selection? 1
+Your selection? 3
+[Enter 12345678]
+[Enter your new Admin PIN]
+[Enter your new Admin PIN again]
+
 PIN changed.
+
+1 - change PIN
+2 - unblock PIN
+3 - change Admin PIN
+4 - set the Reset Code
+Q - quit
+
+Your selection? Q
 ```
 
-### Optional gpg setup
+### (Optional) Other GPG Setup
 
 While you're here:
 ```
 gpg/card> name
-Cardholder's surname: Chang
-Cardholder's given name: Liyan (David)
+Cardholder's surname: [Your last name]
+Cardholder's given name: [Your first name]
+[Enter your admin PIN]
 
 gpg/card> sex
-Sex ((M)ale, (F)emale or space): M
+Sex ((M)ale, (F)emale or space): [Your gender]
 
 gpg/card> lang
-Language preferences: en
-
-gpg/card>
+Language preferences: [Your two letter language code, example: en)
 ```
+
 You can see the configuration by typing `list` on the `gpg/card>` prompt.
 
 https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-openpgp/
 
+## SSH Login
 
+_Before you can do this, you have to do the Setup GPG Key section._
 
-## Yubikey for SSH logins
-
-Should be able to generate a SSH key from the PGP key
-
-## Yubikey for PIV
-
-
-## Yubikey for OSX login
-
-Should be possible once I have a PIV cert on it.
-
-TODO: Look into `yubiswitch` to see how it will lock the screen when the
-yubikey is removed.
-
-
-## Set up your yubikey at TOTP - a Google Authenticator replacement
-
-- Go to [Dropbox Security Settings](https://www.dropbox.com/account/#security)
-- Choose to enable two factor.
-- Select `Use a mobile app`
-- Click `enter your secret key manually` to display a 26 long base32 key.
-- Copy the key below - don't forget to remove the spaces
+You'll be using GPG keys as SSH keys, and we'll start by configuring GPG agent by adding the following block into `.gnupg/gpg-agent.conf`:
 
 ```bash
-% The `-t` will require a touch inorder for codes to be generated.
-% This prevent malware from generating codes without your knowledge.
-> ykman oath add -t <SERVICE_NAME> <32 DIGIT BASE32 KEY NO SPACES>
-> ykman oath code <SERVICE_NAME>
-Touch your YubiKey...
-SERVICE_NAME 693720
+pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac
+enable-ssh-support
+write-env-file
+use-standard-socket
+default-cache-ttl 600
+max-cache-ttl 7200
 ```
 
-- Repeat for other providers.
-
-    The steps will be similar - the difference will be how to get the manual
-    key instead of the QR code. When the QR code is displayed, there will
-    often be a link:
-        - Dropbox: `Enter your secret key manually`
-        - Gmail: `Can't scan it?`
-        - Github `Enter this text code`
-
-Note: There is a way to configure a long press to enter the TOTP password, but
-given that I expect you to have many TOTP codes, this seems pretty useless.
-
-
-## Notes
-
-### Sharing Violation, Card Read Error
-
+and the below block into `~/.bash_profile`:
 
 ```bash
-% Fix by toggling off U2F mode
-> gpg2 --card-edit
-
-gpg: OpenPGP card not available: Not supported
-> gpg --card-status
-
-gpg: OpenPGP card not available: general error
-% Other commands
-> pcsctest
-> opensc-tool
+GPG_TTY=$(tty)
+export GPG_TTY
+if [ -f "${HOME}/.gpg-agent-info" ]; then
+    . "${HOME}/.gpg-agent-info"
+    export GPG_AGENT_INFO
+    export SSH_AUTH_SOCK
+fi
 ```
 
+_Not sure if you have to logout/login or not here, to ensure GPG Tools can pickup the new config. I did just in case. You probably just have to restart GPG Agent and Bash._
 
+Now, we'll convert your GPG public key to a SSH public key and add it to a server.
 
+1. `> gpg2 --card-edit`
+1. From the text that gets displayed (either automatically, or via the `gpg/card> list` command, grab the last 8 digits of the Authentication key hex code (let's say they are `EEEE FFFF` for the example)
+1. `gpg-card> quit`
+1. `gpgkey2ssh EEEEFFFF`
+1. Copy the public key and add it to the machine you want to SSH into
+1. Attempt to login to the machine via SSH
 
+## macOS Login / PIV Login
 
+1. Follow [Yubico's PIV pairing instructions](https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-macos-sierra/)
+1. Follow [Yubico's Login Guide](https://www.yubico.com/wp-content/uploads/2016/02/Yubico_YubiKeyMacOSXLogin_en.pdf) with the suggested sections:
+   - Configuring YubiKeys with the YubiKey Personalization Tool
+   - Installing Yubico Pluggable Authentication Module (PAM) 
+   - Configuring Yubico Pluggable Authentication Module (PAM) _(including all subsections in the chapter)_
+   
+# Credits
 
+Thanks to the following people for instructions and help:
+
+- Yubico's own documentation (referenced inline in the instructions where used)
+- The [original version of this doc](https://github.com/liyanchang/yubikey-setup) by [David Chiang](https://github.com/liyanchang)
+- [Instructions](http://florin.myip.org/blog/easy-multifactor-authentication-ssh-using-yubikey-neo-tokens) by [florin](http://florin.myip.org/blog/blogs/florin)
+- Debugging help from [Weaver](https://github.com/matthewjweaver)
