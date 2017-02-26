@@ -16,7 +16,7 @@ The instructions have been tested on macOS 10.12 (Sierra) with a Yubikey 4.
 
 To perform these instructions, the Yubikey should be plugged into your computer's USB port.
 
-## U2F Setup
+## Use for Two Factor Authentication / U2F Setup
 
 ### GitHub
 
