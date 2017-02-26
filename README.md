@@ -39,9 +39,10 @@ To perform these instructions, the Yubikey should be plugged into your computer'
 
 Yubico has more [detailed instructions](https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-github/).
 
-### Gmail
+### Google
 
-Similar instructions. TODO: Specific details
+Similar instructions. 
+
 1. Go to your [Google Sign-in & Security page](https://myaccount.google.com/security)
 2. Click `Two-step verification` and you may be prompted for your password.
 3. Click `Add Security Key` and follow the on-screen instructions. You may
