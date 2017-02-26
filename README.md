@@ -137,8 +137,8 @@ Q - quit
 
 Your selection? 3
 [Enter 12345678]
-[Enter your new PIN]
-[Enter your new PIN again]
+[Enter your new Admin PIN]
+[Enter your new Admin PIN again]
 
 PIN changed.
 
