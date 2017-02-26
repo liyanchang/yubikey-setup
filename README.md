@@ -49,21 +49,7 @@ Similar instructions. TODO: Specific details
 
 Yubico has a [video](https://www.yubico.com/why-yubico/for-individuals/gmail-for-individuals/)
 
-### Dropbox
-
-1. Go to your [Dropbox Security Settings](https://www.dropbox.com/account/#security)
-2. Under `Security keys`, click `Add`
-3. Follow the on-screen instructions. You'll probably be prompted for your
-   password and touch the yubikey to complete registration.
-
-Yubico has a [video and more detailed instructions](https://www.yubico.com/why-yubico/for-individuals/dropbox-for-individuals/)
-
-### Dashlane, Salesforce, Bitbucket, Gitlab, GOV.UK Verify
-
-Yubico has [instructions](https://www.yubico.com/about/background/fido/)
-
 ## Setup GPG Key
-
 
 Start a Terminal session, then issue the following commands and options:
 
