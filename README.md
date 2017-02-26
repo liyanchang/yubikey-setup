@@ -189,14 +189,13 @@ https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-op
 
 Should be able to generate a SSH key from the PGP key
 
-## Yubikey for PIV
+## macOS Login / PIV Login
 
-## Yubikey for OSX login
-
-Should be possible once I have a PIV cert on it.
-
-TODO: Look into `yubiswitch` to see how it will lock the screen when the
-yubikey is removed.
+1. Follow [Yubico's PIV pairing instructions](https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-macos-sierra/)
+1. Follow [Yubico's Login Guide](https://www.yubico.com/wp-content/uploads/2016/02/Yubico_YubiKeyMacOSXLogin_en.pdf) with the suggested sections:
+   - Configuring YubiKeys with the YubiKey Personalization Tool
+   - Installing Yubico Pluggable Authentication Module (PAM) 
+   - Configuring Yubico Pluggable Authentication Module (PAM) _(including all subsections in the chapter)_
 
 ## Set up your yubikey at TOTP - a Google Authenticator replacement
 
