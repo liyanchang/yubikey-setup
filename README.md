@@ -156,15 +156,15 @@ Your selection? Q
 While you're here:
 ```
 gpg/card> name
-Cardholder's surname: Chang
-Cardholder's given name: Liyan (David)
+Cardholder's surname: [Your last name]
+Cardholder's given name: [Your first name]
 [Enter your admin PIN]
 
 gpg/card> sex
-Sex ((M)ale, (F)emale or space): M
+Sex ((M)ale, (F)emale or space): [Your gender]
 
 gpg/card> lang
-Language preferences: en
+Language preferences: [Your two letter language code, example: en)
 ```
 
 You can see the configuration by typing `list` on the `gpg/card>` prompt.
@@ -183,10 +183,3 @@ Should be able to generate a SSH key from the PGP key
    - Configuring YubiKeys with the YubiKey Personalization Tool
    - Installing Yubico Pluggable Authentication Module (PAM) 
    - Configuring Yubico Pluggable Authentication Module (PAM) _(including all subsections in the chapter)_
-
-
-
-
-
-
-
