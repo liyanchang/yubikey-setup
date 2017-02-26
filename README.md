@@ -170,10 +170,45 @@ You can see the configuration by typing `list` on the `gpg/card>` prompt.
 
 https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-openpgp/
 
+## SSH Login
 
-## Yubikey for SSH logins
+_Before you can do this, you have to do the Setup GPG Key section._
 
-Should be able to generate a SSH key from the PGP key
+You'll be using GPG keys as SSH keys, but since they're different protocols, we'll have to configure GPG agent.
+
+First, add the following block into `.gnupg/gpg-agent.conf`:
+
+```bash
+pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac
+enable-ssh-support
+write-env-file
+use-standard-socket
+default-cache-ttl 600
+max-cache-ttl 7200
+```
+
+and the below block into `~/.bash_profile`:
+
+```bash
+GPG_TTY=$(tty)
+export GPG_TTY
+if [ -f "${HOME}/.gpg-agent-info" ]; then
+    . "${HOME}/.gpg-agent-info"
+    export GPG_AGENT_INFO
+    export SSH_AUTH_SOCK
+fi
+```
+
+_Not sure if you have to logout/login, or not here. I did just in case. You probably just have to restart GPG Agent._
+
+Now, we'll convert your GPG public key to a SSH public key and add it to a server.
+
+1. `> gpg2 --card-edit`
+1. From the text that gets displayed (either automatically, or via the `gpg/card> list` command, grab the last 8 digits of the Authentication key hex code (let's say they are `EEEE FFFF` for the example)
+1. `gpg-card> quit`
+1. `gpgkey2ssh EEEEFFFF`
+1. Copy the public key and add it to the machine you want to SSH into
+1. Attempt to login to the machine via SSH
 
 ## macOS Login / PIV Login
 
@@ -182,3 +217,12 @@ Should be able to generate a SSH key from the PGP key
    - Configuring YubiKeys with the YubiKey Personalization Tool
    - Installing Yubico Pluggable Authentication Module (PAM) 
    - Configuring Yubico Pluggable Authentication Module (PAM) _(including all subsections in the chapter)_
+   
+# Credits
+
+Thanks to the following people for instructions and help:
+
+- Yubico's own documentation (referenced inline in the instructions where used)
+- The [original version of this doc](https://github.com/liyanchang/yubikey-setup) by [David Chiang](https://github.com/liyanchang)
+- [Instructions](http://florin.myip.org/blog/easy-multifactor-authentication-ssh-using-yubikey-neo-tokens) by [florin](http://florin.myip.org/blog/blogs/florin)
+- Debugging help from [Weaver](https://github.com/matthewjweaver)
