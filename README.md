@@ -174,9 +174,7 @@ https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-op
 
 _Before you can do this, you have to do the Setup GPG Key section._
 
-You'll be using GPG keys as SSH keys, but since they're different protocols, we'll have to configure GPG agent.
-
-First, add the following block into `.gnupg/gpg-agent.conf`:
+You'll be using GPG keys as SSH keys, and we'll start by configuring GPG agent by adding the following block into `.gnupg/gpg-agent.conf`:
 
 ```bash
 pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac
@@ -199,7 +197,7 @@ if [ -f "${HOME}/.gpg-agent-info" ]; then
 fi
 ```
 
-_Not sure if you have to logout/login, or not here. I did just in case. You probably just have to restart GPG Agent._
+_Not sure if you have to logout/login or not here, to ensure GPG Tools can pickup the new config. I did just in case. You probably just have to restart GPG Agent and Bash._
 
 Now, we'll convert your GPG public key to a SSH public key and add it to a server.
 
