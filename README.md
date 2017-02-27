@@ -264,9 +264,90 @@ https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-op
 
 ## Yubikey for SSH logins
 
-Should be able to generate a SSH key from the PGP key
+You can generate an SSH key from your PGP key
+
+```
+> gpgkey2ssh 698BD042
+ssh-rsa AAAAG4AFq6wm1eCcRclsVOYcJf8y
+...
+...
+G46wm1eCcRclsVOYcJf8yPr1b+kzUpGQLw==
+```
 
 ## Yubikey for PIV
+
+Honestly? just use the yubikey-piv-manager
+> brew cask install Caskroom/cask/yubikey-piv-manager
+
+Set up the pin. Click the set up for mac auth button.
+
+```
+> yubico-piv-tool -s 9a -A ECCP256 -a generate
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEJ3JEeJIUv434IOOTm/Vxn5+VElMo
+/w+onkclMjyMhqCpXz/vrHZ3mz+TePsiuD0BQ/rACt29aHHcVhilZZMD6Q==
+-----END PUBLIC KEY-----
+Successfully generated a new private key.
+
+```
+yubico-piv-tool -s 9a -S '/CN=nano4/OU=yubikey/O=ldchang.com/' -P 123456 -a verify -a request
+
+Successfully verified PIN.
+Please paste the public key...
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEJ3JEeJIUv434IOOTm/Vxn5+VElMo
+/w+onkclMjyMhqCpXz/vrHZ3mz+TePsiuD0BQ/rACt29aHHcVhilZZMD6Q==
+-----END PUBLIC KEY-----
+-----BEGIN CERTIFICATE REQUEST-----
+MIHzMIGaAgEAMDgxDjAMBgNVBAMMBW5hbm80MRAwDgYDVQQLDAd5dWJpa2V5MRQw
+EgYDVQQKDAtsZGNoYW5nLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABCdy
+RHiSFL+N+CDjk5v1cZ+flRJTKP8PqJ5HJTI8jIagqV8/76x2d5s/k3j7Irg9AUP6
+wArdvWhx3FYYpWWTA+mgADAKBggqhkjOPQQDAgNIADBFAiBurbEtg3rcqQLAIev/
+or6hsRi8/JPOdriPp8iS6tr7JwIhAKgsMAfasxwMfdStHOrDMW7Z1RUEiD9BS/Kx
+60CVD7wo
+-----END CERTIFICATE REQUEST-----
+Successfully generated a certificate request.
+```
+
+```
+yubico-piv-tool -s 9a -S '/CN=nano4/OU=yubikey/O=ldchang.com/' -P 123456 -a verify -a selfsign
+
+Successfully verified PIN.
+Please paste the public key...
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEJ3JEeJIUv434IOOTm/Vxn5+VElMo
+/w+onkclMjyMhqCpXz/vrHZ3mz+TePsiuD0BQ/rACt29aHHcVhilZZMD6Q==
+-----END PUBLIC KEY-----
+-----BEGIN CERTIFICATE-----
+MIIBZDCCAQugAwIBAgIJAJ0Roi4bRbLVMAoGCCqGSM49BAMCMDgxDjAMBgNVBAMM
+BW5hbm80MRAwDgYDVQQLDAd5dWJpa2V5MRQwEgYDVQQKDAtsZGNoYW5nLmNvbTAe
+Fw0xNzAyMDgwMzU2NDlaFw0xODAyMDgwMzU2NDlaMDgxDjAMBgNVBAMMBW5hbm80
+MRAwDgYDVQQLDAd5dWJpa2V5MRQwEgYDVQQKDAtsZGNoYW5nLmNvbTBZMBMGByqG
+SM49AgEGCCqGSM49AwEHA0IABCdyRHiSFL+N+CDjk5v1cZ+flRJTKP8PqJ5HJTI8
+jIagqV8/76x2d5s/k3j7Irg9AUP6wArdvWhx3FYYpWWTA+kwCgYIKoZIzj0EAwID
+RwAwRAIgfp4BlakZPo46KGHjVVSxrHf3EYt7Jw270RkVgM0IZfsCIFE8hT7t1xoR
+GctoS3TY7KF9UOSPYbO0VH2HWYYr1jEO
+-----END CERTIFICATE-----
+Successfully generated a new self signed certificate.
+```
+
+```
+> yubico-piv-tool -s 9a -a import-certificate
+Please paste the certificate...
+-----BEGIN CERTIFICATE-----
+MIIBZDCCAQugAwIBAgIJAJ0Roi4bRbLVMAoGCCqGSM49BAMCMDgxDjAMBgNVBAMM
+BW5hbm80MRAwDgYDVQQLDAd5dWJpa2V5MRQwEgYDVQQKDAtsZGNoYW5nLmNvbTAe
+Fw0xNzAyMDgwMzU2NDlaFw0xODAyMDgwMzU2NDlaMDgxDjAMBgNVBAMMBW5hbm80
+MRAwDgYDVQQLDAd5dWJpa2V5MRQwEgYDVQQKDAtsZGNoYW5nLmNvbTBZMBMGByqG
+SM49AgEGCCqGSM49AwEHA0IABCdyRHiSFL+N+CDjk5v1cZ+flRJTKP8PqJ5HJTI8
+jIagqV8/76x2d5s/k3j7Irg9AUP6wArdvWhx3FYYpWWTA+kwCgYIKoZIzj0EAwID
+RwAwRAIgfp4BlakZPo46KGHjVVSxrHf3EYt7Jw270RkVgM0IZfsCIFE8hT7t1xoR
+GctoS3TY7KF9UOSPYbO0VH2HWYYr1jEO
+-----END CERTIFICATE-----
+Successfully imported a new certificate.
+```
+
+
 
 
 ## Yubikey for OSX login
