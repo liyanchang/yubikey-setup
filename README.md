@@ -284,36 +284,126 @@ https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-op
 
 ## YubiKey for SSH logins
 
-Should be able to generate a SSH key from the PGP key
+You can generate an SSH key from your PGP key and use it for SSH logins.
+
+1. Identify your authentication key.
+
+    ```bash
+    > gpg2 --card-status | grep Authentication
+    Authentication key: AAAA BBBB CCCC DDDD EEEE  FFFF GGGG HHHH IIII JJJJ
+    ```
+
+2. Generate the SSH key
+
+    Take the last 8 digits and pass them to `gpgkey2ssh`.
+
+    ```bash
+    > gpgkey2ssh IIIIJJJJ
+    ssh-rsa AAAAG4AFq6wm1eCcRclsVOYcJf8y
+    ...
+    ...
+    G46wm1eCcRclsVOYcJf8yPr1b+kzUpGQLw==
+    ```
+
+3. Copy the public key and add it `~/.ssh/authorized_keys` the machine you want to SSH into
+4. Attempt to login to the machine via SSH
 
 ## YubiKey for PIV
 
+Yubico has a GUI tool called yubikey-piv-manager that can help set up your
+YubiKey for PIV. While I have a preference for command-line tools, the GUI
+sets everything up in one click and saves significant hassle.
+
+> brew cask install Caskroom/cask/yubikey-piv-manager
+
+Set up the pin. Click the set up for mac auth button.
+
+<!-- Notes from when I was trying to set it up by hand
+
+```
+> yubico-piv-tool -s 9a -A ECCP256 -a generate
+-----BEGIN PUBLIC KEY-----
+...
+-----END PUBLIC KEY-----
+Successfully generated a new private key.
+
+```
+yubico-piv-tool -s 9a -S '/CN=nano4/OU=yubikey/O=ldchang.com/' -P 123456 -a verify -a request
+
+Successfully verified PIN.
+Please paste the public key...
+-----BEGIN PUBLIC KEY-----
+...
+-----END PUBLIC KEY-----
+-----BEGIN CERTIFICATE REQUEST-----
+...
+-----END CERTIFICATE REQUEST-----
+Successfully generated a certificate request.
+```
+
+```
+yubico-piv-tool -s 9a -S '/CN=nano4/OU=yubikey/O=ldchang.com/' -P 123456 -a verify -a selfsign
+
+Successfully verified PIN.
+Please paste the public key...
+-----BEGIN PUBLIC KEY-----
+...
+-----END PUBLIC KEY-----
+-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----
+Successfully generated a new self signed certificate.
+```
+
+```
+> yubico-piv-tool -s 9a -a import-certificate
+Please paste the certificate...
+-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----
+Successfully imported a new certificate.
+```
+
+-->
 
 ## YubiKey for OSX login
 
-Should be possible once I have a PIV cert on it.
+Once you have PIV credentials on your YubiKey, macOS should prompt you if you
+want to use it for login.
 
 TODO: Look into `yubiswitch` to see how it will lock the screen when the
 YubiKey is removed.
 
-
 ## Set up your YubiKey at TOTP - a Google Authenticator replacement
 
-- Go to [Dropbox Security Settings](https://www.dropbox.com/account/#security)
-- Choose to enable two factor.
-- Select `Use a mobile app`
-- Click `enter your secret key manually` to display a 26 long base32 key.
-- Copy the key below - don't forget to remove the spaces
+You can have your YubiKey generate TOTP codes, just like Google Authenticator
+or Authy.
 
-```bash
-% The `-t` will require a touch inorder for codes to be generated.
-% This prevent malware from generating codes without your knowledge.
-% YubiKey Neo's do not support this feature. Just remove the `-t` flag.
-> ykman oath add -t <SERVICE_NAME> <32 DIGIT BASE32 KEY NO SPACES>
-> ykman oath code <SERVICE_NAME>
-Touch your YubiKey...
-SERVICE_NAME 693720
-```
+If you use it as a replacement for Google Authenticator, remember that you'll
+be unable to get the code if you don't have your YubiKey with you and a
+computer with `ykman` or `Yubico Authenticator` installed or an Android phone
+with `Yubico Authenticator` installed.
+
+You can also use both a phone based app and a YubiKey, knowing that either
+device will generate the same codes and will be able to access your account.
+
+1. Go to [Dropbox Security Settings](https://www.dropbox.com/account/#security)
+2. Choose to enable two factor.
+3. Select `Use a mobile app`
+4. Click `enter your secret key manually` to display a 26 long base32 key.
+5. (Optional) If you also want to use your phone, you can scan the barcode or
+   type in the code to `Google Authenticator`.
+5. Copy the key below - don't forget to remove the spaces
+
+    ```bash
+    % The `-t` will require a touch inorder for codes to be generated.
+    % This prevent malware from generating codes without your knowledge.
+    % YubiKey Neo's do not support this feature. Just remove the `-t` flag.
+    > ykman oath add -t <SERVICE_NAME> <32 DIGIT BASE32 KEY NO SPACES>
+    > ykman oath code <SERVICE_NAME>
+    Touch your YubiKey...
+    SERVICE_NAME 693720
+    ```
 
 - Repeat for other providers.
 
@@ -323,28 +413,4 @@ SERVICE_NAME 693720
         - Dropbox: `Enter your secret key manually`
         - Gmail: `Can't scan it?`
         - Github `Enter this text code`
-
-
-## Notes
-
-### Sharing Violation, Card Read Error
-
-
-```bash
-% Fix by toggling off U2F mode
-> gpg2 --card-edit
-
-gpg: OpenPGP card not available: Not supported
-> gpg --card-status
-
-gpg: OpenPGP card not available: general error
-% Other commands
-> pcsctest
-> opensc-tool
-```
-
-
-
-
-
 
