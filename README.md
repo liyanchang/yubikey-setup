@@ -1,21 +1,21 @@
-# Yubikey Setup
+# YubiKey Setup
 
-*You bought a yubikey - now what?*
+*You bought a YubiKey - now what?*
 
-The goal is to outline the steps to configure your yubikey in a sane method
+The goal is to outline the steps to configure your YubiKey in a sane method
 and to use it to maximize your security.
 
 This guide is for users who are comfortable with the command line and various
 technical jargon.
 
-This is highly opinionated on how you should and should not use your yubikey
+This is highly opinionated on how you should and should not use your YubiKey
 but is organized well enough that you should be able to modify if you have a
 need.
 
-The instructions have been tested on macOS 10.12 (Sierra) with a Yubikey 4 and
-Yubikey Neo.
+The instructions have been tested on macOS 10.12 (Sierra) with a YubiKey 4 and
+YubiKey Neo.
 
-To perform these instructions, the Yubikey should be plugged into your
+To perform these instructions, the YubiKey should be plugged into your
 computer's USB port.
 
 
@@ -31,7 +31,7 @@ computer's USB port.
 
 This will turn off One-Time-Password. Most users will not find OTP useful and
 will be confused by the random letters that will appear when they accidentally
-touch the yubikey.
+touch the YubiKey.
 
 _Exception:_ If you use LastPass - LastPass does use OTP for their two factor
 and not U2F or TOTP (Google Authenticator) so you will want to skip this step
@@ -47,7 +47,7 @@ Mode set! You must remove and re-insert your YubiKey for this change to take
 effect.
 ```
 
-Remove and re-insert the yubikey.
+Remove and re-insert the YubiKey.
 
 ```bash
 > ykman mode
@@ -66,7 +66,7 @@ Supported connections are: OTP, U2F, CCID
 4. Type in a name: `yourname-yubikey-nano4` or something else that will help
    you remember the key
 5. Click `Add`
-6. Follow the instructions on screen - you'll probably need to tap the yubikey
+6. Follow the instructions on screen - you'll probably need to tap the YubiKey
    for it to register.
 
 Yubico has more [detailed instructions](https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-github/).
@@ -78,7 +78,7 @@ Similar instructions.
 1. Go to your [Google Sign-in & Security page](https://myaccount.google.com/security)
 2. Click `Two-step verification` and you may be prompted for your password.
 3. Click `Add Security Key` and follow the on-screen instructions. You may
-   need to tap or touch your yubikey.
+   need to tap or touch your YubiKey.
 
 Yubico has a [video](https://www.yubico.com/why-yubico/for-individuals/gmail-for-individuals/)
 
@@ -87,7 +87,7 @@ Yubico has a [video](https://www.yubico.com/why-yubico/for-individuals/gmail-for
 1. Go to your [Dropbox Security Settings](https://www.dropbox.com/account/#security)
 2. Under `Security keys`, click `Add`
 3. Follow the on-screen instructions. You'll probably be prompted for your
-   password and touch the yubikey to complete registration.
+   password and touch the YubiKey to complete registration.
 
 Yubico has a [video and more detailed instructions](https://www.yubico.com/why-yubico/for-individuals/dropbox-for-individuals/)
 
@@ -95,7 +95,7 @@ Yubico has a [video and more detailed instructions](https://www.yubico.com/why-y
 
 Yubico has [instructions](https://www.yubico.com/about/background/fido/)
 
-## Yubikey for GPG keysigning
+## YubiKey for GPG keysigning
 
 1. Install GPG2 if you haven't already
 
@@ -133,7 +133,7 @@ pcsc-driver /System/Library/Frameworks/PCSC.framework/PCSC
 3. Temporarily disable U2F
 
 Having U2F enabled will result in `sharing violations` that results in `gpg2`
-not being able to access the yubikey.
+not being able to access the YubiKey.
 
 You will be able to renable U2F and it won't break any sites you already set
 up with U2F.
@@ -152,7 +152,7 @@ Supported connections are: OTP, U2F, CCID
 
 3. Generate Keys
 
-_Note:_ If you have a Yubikey 4, you should use 4096 as your key length. NEO
+_Note:_ If you have a YubiKey 4, you should use 4096 as your key length. NEO
 owners should use 2048 as that is the maximum supported.
 
 ```bash
@@ -168,15 +168,15 @@ Make off-card backup of encryption key? (Y/n) n
 
 [PIN Entry pops up, enter 123456, which is the default pin]
 
-What keysize do you want for the Signature key? (2048) 4096 [Yubikey NEO max is 2048]
+What keysize do you want for the Signature key? (2048) 4096 [YubiKey NEO max is 2048]
 [PIN Entry pops up, enter 12345678, which is the default admin pin]
 The card will now be re-configured to generate a key of 4096 bits
 
-What keysize do you want for the Encryption key? (2048) 4096 [Yubikey NEO max is 2048]
+What keysize do you want for the Encryption key? (2048) 4096 [YubiKey NEO max is 2048]
 [PIN Entry pops up, enter 12345678, which is the default admin pin]
 The card will now be re-configured to generate a key of 4096 bits
 
-What keysize do you want for the Authentication key? (2048) 4096 [Yubikey NEO max is 2048]
+What keysize do you want for the Authentication key? (2048) 4096 [YubiKey NEO max is 2048]
 [PIN Entry pops up, enter 12345678, which is the default admin pin]
 The card will now be re-configured to generate a key of 4096 bits
 
@@ -201,7 +201,7 @@ You selected this USER-ID:
 Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
 ```
 
-The Yubikey will flash as it's creating the key. Mine took about 5 minutes.
+The YubiKey will flash as it's creating the key. Mine took about 5 minutes.
 When complete, it will say something like
 
 ```
@@ -282,22 +282,22 @@ https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-op
 
 
 
-## Yubikey for SSH logins
+## YubiKey for SSH logins
 
 Should be able to generate a SSH key from the PGP key
 
-## Yubikey for PIV
+## YubiKey for PIV
 
 
-## Yubikey for OSX login
+## YubiKey for OSX login
 
 Should be possible once I have a PIV cert on it.
 
 TODO: Look into `yubiswitch` to see how it will lock the screen when the
-yubikey is removed.
+YubiKey is removed.
 
 
-## Set up your yubikey at TOTP - a Google Authenticator replacement
+## Set up your YubiKey at TOTP - a Google Authenticator replacement
 
 - Go to [Dropbox Security Settings](https://www.dropbox.com/account/#security)
 - Choose to enable two factor.
