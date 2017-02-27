@@ -12,9 +12,11 @@ This is highly opinionated on how you should and should not use your yubikey
 but is organized well enough that you should be able to modify if you have a
 need.
 
-The instructions have been tested on macOS 10.12 (Sierra) with a Yubikey 4.
+The instructions have been tested on macOS 10.12 (Sierra) with a Yubikey 4 and
+Yubikey Neo.
 
-To perform these instructions, the Yubikey should be plugged into your computer's USB port.
+To perform these instructions, the Yubikey should be plugged into your
+computer's USB port.
 
 
 ## Install some software
@@ -41,7 +43,8 @@ Current connection mode is: OTP+U2F+CCID
 Supported connections are: OTP, U2F, CCID
 > ykman mode "U2F+CCID"
 Set mode of YubiKey to U2F+CCID? [y/N]: Y
-Mode set! You must remove and re-insert your YubiKey for this change to take effect.
+Mode set! You must remove and re-insert your YubiKey for this change to take
+effect.
 ```
 
 Remove and re-insert the yubikey.
@@ -319,9 +322,6 @@ SERVICE_NAME 693720
         - Dropbox: `Enter your secret key manually`
         - Gmail: `Can't scan it?`
         - Github `Enter this text code`
-
-Note: There is a way to configure a long press to enter the TOTP password, but
-given that I expect you to have many TOTP codes, this seems pretty useless.
 
 
 ## Notes
