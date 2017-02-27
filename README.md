@@ -1,4 +1,4 @@
-# YubiKey Setup
+# YubiKey macOS Setup
 
 *You bought a YubiKey - now what?*
 
@@ -13,11 +13,11 @@ but is organized well enough that you should be able to modify if you have a
 need.
 
 The instructions have been tested on macOS 10.12 (Sierra) with a YubiKey 4 and
-YubiKey Neo.
+YubiKey Neo. While there are sections that are OS independent, most of the
+tricky bits are macOS specific.
 
 To perform these instructions, the YubiKey should be plugged into your
 computer's USB port.
-
 
 ## Install some software
 
