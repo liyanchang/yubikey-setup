@@ -58,6 +58,13 @@ Supported connections are: OTP, U2F, CCID
 
 ## Use for Two Factor Authentication / U2F Setup
 
+U2F is the recommended two factor method. It is phishing resistant unlike
+TOTP/Google Authenticator. It is much harder to compromise than SMS/Voice call
+methods.
+
+The instructions below are specific to provider, but they are all similar
+enough.
+
 ### GitHub
 
 1. Go to your [GitHub Security Settings](https://github.com/settings/security)
@@ -73,8 +80,6 @@ Supported connections are: OTP, U2F, CCID
 Yubico has more [detailed instructions](https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-github/).
 
 ### Google
-
-Similar instructions. 
 
 1. Go to your [Google Sign-in & Security page](https://myaccount.google.com/security)
 2. Click `Two-step verification` and you may be prompted for your password.
@@ -247,7 +252,7 @@ Yubico has [instructions](https://www.yubico.com/about/background/fido/)
 4. (Optional) Other GPG Setup
 
    While you're here:
-   ```
+   ```bash
    gpg/card> name
    Cardholder's surname: [Your last name]
    Cardholder's given name: [Your first name]
@@ -296,9 +301,33 @@ Yubico has a GUI tool called yubikey-piv-manager that can help set up your
 YubiKey for PIV. While I have a preference for command-line tools, the GUI
 sets everything up in one click and saves significant hassle.
 
-> brew cask install Caskroom/cask/yubikey-piv-manager
+1. Install YubiKey PIV Manager
 
-Set up the pin. Click the set up for mac auth button.
+    ```bash
+    > brew cask install Caskroom/cask/yubikey-piv-manager
+    ```
+
+2. Navigate to `Setup for macOS` and click `yes`.
+
+    Choose a 6-8 digit number. Don't use non-numeric characters. Yubikey will
+    be fine, but macOS will not.
+
+    The default settings are fine.
+
+3. Remove and re-insert your YubiKey.
+
+4. Pair with macOS
+
+    When you insert your Yubikey, a prompt should appear asking if you would
+    like to pair your smartcard. Click `Pair`. It will ask for your username
+    and password as well as the pin you just created. It may also ask you for
+    your keychain password - it's the same as your account password.
+
+5. Login with your YubiKey and PIN
+
+    The next time you login with your YubiKey inserted, macOS should prompt
+    you for your PIN and not a password.
+
 
 <!-- Notes from when I was trying to set it up by hand
 
@@ -394,7 +423,7 @@ device will generate the same codes and will be able to access your account.
     The steps will be similar - the difference will be how to get the manual
     key instead of the QR code. When the QR code is displayed, there will
     often be a link to get the code. Here are some examples:
-    
+
     - Dropbox: `Enter your secret key manually`
     - Gmail: `Can't scan it?`
     - Github `Enter this text code`
