@@ -308,6 +308,7 @@ yubikey is removed.
 ```bash
 % The `-t` will require a touch inorder for codes to be generated.
 % This prevent malware from generating codes without your knowledge.
+% YubiKey Neo's do not support this feature. Just remove the `-t` flag.
 > ykman oath add -t <SERVICE_NAME> <32 DIGIT BASE32 KEY NO SPACES>
 > ykman oath code <SERVICE_NAME>
 Touch your YubiKey...
