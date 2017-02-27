@@ -1,4 +1,4 @@
-# Yubikey setup
+# Yubikey Setup
 
 *You bought a yubikey - now what?*
 
@@ -12,11 +12,10 @@ This is highly opinionated on how you should and should not use your yubikey
 but is organized well enough that you should be able to modify if you have a
 need.
 
-The instructions are only for OSX 10.12.
+The instructions have been tested on macOS 10.12 (Sierra) with a Yubikey 4.
 
-## Insert the yubikey into your computer
+To perform these instructions, the Yubikey should be plugged into your computer's USB port.
 
-Plug it into a USB port.
 
 ## Install some software
 
@@ -53,9 +52,9 @@ Current connection mode is: U2F+CCID
 Supported connections are: OTP, U2F, CCID
 ```
 
-## Set up your U2F
+## Use for Two Factor Authentication / U2F Setup
 
-### Github
+### GitHub
 
 1. Go to your [GitHub Security Settings](https://github.com/settings/security)
 2. Turn on `Two-factor Authentication` if it's not already enabled. You will
@@ -69,9 +68,10 @@ Supported connections are: OTP, U2F, CCID
 
 Yubico has more [detailed instructions](https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-github/).
 
-### Gmail
+### Google
 
-Similar instructions. TODO: Specific details
+Similar instructions. 
+
 1. Go to your [Google Sign-in & Security page](https://myaccount.google.com/security)
 2. Click `Two-step verification` and you may be prompted for your password.
 3. Click `Add Security Key` and follow the on-screen instructions. You may
@@ -155,7 +155,7 @@ owners should use 2048 as that is the maximum supported.
 ```bash
 > gpg2 --card-edit
 
-[truncated]...
+[truncated...]
 
 gpg/card> admin
 Admin commands are allowed
@@ -163,19 +163,20 @@ Admin commands are allowed
 gpg/card> generate
 Make off-card backup of encryption key? (Y/n) n
 
-Please note that the factory settings of the PINs are
-   PIN = `123456'     Admin PIN = `12345678'
-You should change them using the command --change-pin
+[PIN Entry pops up, enter 123456, which is the default pin]
 
-What keysize do you want for the Signature key? (2048) 4096
+What keysize do you want for the Signature key? (2048) 4096 [Yubikey NEO max is 2048]
+[PIN Entry pops up, enter 12345678, which is the default admin pin]
 The card will now be re-configured to generate a key of 4096 bits
-NOTE: There is no guarantee that the card supports the requested size.
-      If the key generation does not succeed, please check the
-      documentation of your card to see what sizes are allowed.
-What keysize do you want for the Encryption key? (2048) 4096
+
+What keysize do you want for the Encryption key? (2048) 4096 [Yubikey NEO max is 2048]
+[PIN Entry pops up, enter 12345678, which is the default admin pin]
 The card will now be re-configured to generate a key of 4096 bits
-What keysize do you want for the Authentication key? (2048) 4096
+
+What keysize do you want for the Authentication key? (2048) 4096 [Yubikey NEO max is 2048]
+[PIN Entry pops up, enter 12345678, which is the default admin pin]
 The card will now be re-configured to generate a key of 4096 bits
+
 Please specify how long the key should be valid.
          0 = key does not expire
       <n>  = key expires in n days
@@ -197,14 +198,14 @@ You selected this USER-ID:
 Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
 ```
 
-The yubikey will flash as it's creating the key. Mine took about 5 minutes.
+The Yubikey will flash as it's creating the key. Mine took about 5 minutes.
 When complete, it will say something like
 
 ```
 gpg: key 00000000 marked as ultimately trusted
 public and secret key created and signed.
 
-...truncated...
+[truncated...]
 ```
 
 You should change your PIN and Admin PIN. You can do that here with `passwd`
@@ -227,7 +228,11 @@ gpg/card> passwd
 4 - set the Reset Code
 Q - quit
 
-Your selection? 3
+Your selection? 1
+[Enter 123456]
+[Enter your new PIN]
+[Enter your new PIN again]
+
 PIN changed.
 
 1 - change PIN
@@ -236,26 +241,38 @@ PIN changed.
 4 - set the Reset Code
 Q - quit
 
-Your selection? 1
+Your selection? 3
+[Enter 12345678]
+[Enter your new Admin PIN]
+[Enter your new Admin PIN again]
+
 PIN changed.
+
+1 - change PIN
+2 - unblock PIN
+3 - change Admin PIN
+4 - set the Reset Code
+Q - quit
+
+Your selection? Q
 ```
 
-### Optional gpg setup
+### (Optional) Other GPG Setup
 
 While you're here:
 ```
 gpg/card> name
-Cardholder's surname: Chang
-Cardholder's given name: Liyan (David)
+Cardholder's surname: [Your last name]
+Cardholder's given name: [Your first name]
+[Enter your admin PIN]
 
 gpg/card> sex
-Sex ((M)ale, (F)emale or space): M
+Sex ((M)ale, (F)emale or space): [Your gender]
 
 gpg/card> lang
-Language preferences: en
-
-gpg/card>
+Language preferences: [Your two letter language code, example: en)
 ```
+
 You can see the configuration by typing `list` on the `gpg/card>` prompt.
 
 https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-openpgp/
