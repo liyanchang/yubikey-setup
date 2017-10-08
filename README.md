@@ -124,6 +124,8 @@ Yubico has [instructions](https://www.yubico.com/about/background/fido/)
 
 3. Temporarily disable U2F
 
+   NOTE: This seemed not to be an issue with my most recent yubikey.
+
    Having U2F enabled will result in `sharing violations` that results in `gpg2`
    not being able to access the YubiKey. You will be able to renable U2F and it
    won't break any sites you already set up with U2F.
@@ -282,10 +284,10 @@ You can generate an SSH key from your PGP key and use it for SSH logins.
 
 2. Generate the SSH key
 
-    Take the last 8 digits and pass them to `gpgkey2ssh`.
+    Take the last 16 digits and pass them to `gpg --export-ssh-key`.
 
     ```bash
-    > gpgkey2ssh IIIIJJJJ
+    > gpg --export-ssh-key GGGGHHHHIIIIJJJJ
     ssh-rsa AAAAG4AFq6wm1eCcRclsVOYcJf8y
     ...
     ...
