@@ -40,25 +40,19 @@ and don't set up OTP, I'd suggest you disable OTP.
 
 ```bash
 > ykman mode
-Current connection mode is: OTP+U2F+CCID
-Supported connections are: OTP, U2F, CCID
-> ykman mode "U2F+CCID"
-Set mode of YubiKey to U2F+CCID? [y/N]: Y
+Current connection mode is: OTP+FIDO+CCID
+Supported connections are: OTP, FIDO, CCID
+> ykman config mode "FIDO+CCID"
+Set mode of YubiKey to FIDO+CCID? [y/N]: Y
 Mode set! You must remove and re-insert your YubiKey for this change to take
 effect.
 ```
 
 Remove and re-insert the YubiKey.
 
-```bash
-> ykman mode
-Current connection mode is: U2F+CCID
-Supported connections are: OTP, U2F, CCID
-```
+## Use for Two Factor Authentication / FIDO (U2F) Setup
 
-## Use for Two Factor Authentication / U2F Setup
-
-U2F is the recommended two factor method. It is phishing resistant unlike
+FIDO (U2F) is the recommended two factor method. It is phishing resistant unlike
 TOTP/Google Authenticator. It is much harder to compromise than SMS/Voice call
 methods.
 
@@ -131,15 +125,9 @@ Yubico has [instructions](https://www.yubico.com/about/background/fido/)
    won't break any sites you already set up with U2F.
 
    ```bash
-   > ykman mode
-   Current connection mode is: U2F+CCID
-   Supported connections are: OTP, U2F, CCID
-   > ykman mode "CCID"
+   > ykman config mode "CCID"
    Set mode of YubiKey to CCID? [y/N]: Y
    Mode set! You must remove and re-insert your YubiKey for this change to take effect.
-   > ykman mode
-   Current connection mode is: CCID
-   Supported connections are: OTP, U2F, CCID
    ```
 
 3. Generate Keys
